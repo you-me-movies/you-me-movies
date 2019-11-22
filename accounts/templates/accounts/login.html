@@ -1,5 +1,6 @@
 {% extends 'movies/base.html' %}
 {% load bootstrap4 %}
+{% load socialaccount %}
 
 
 {% block content %}
@@ -9,7 +10,11 @@
     {% bootstrap_form form %}
     {% buttons submit="로그인" reset="Cancel" %}{% endbuttons %}
   </form>
+
   <a href="{% provider_login_url 'google' %}" class="btn btn-success">구글 로그인</a>
+
+  <a href="{% provider_login_url 'kakao' %}" class='btn btn-warning'>카카오 로그인</a>
+
 
 
 {% endblock  %}
