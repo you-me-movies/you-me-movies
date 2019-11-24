@@ -16,6 +16,7 @@ class Movie(models.Model):
     vote_average = models.IntegerField()
     genre_ids = models.ManyToManyField(Genre, related_name='movie_genre', blank=True)
     poster_path = models.CharField(max_length=200)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True)
 
     class Meta:
         ordering = ['-pk']
