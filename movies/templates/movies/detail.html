@@ -4,7 +4,7 @@
 {% block content %}
   <h1>DETAIL</h1>
   <hr>
-  <img class="w-25" src="{{ movie.poster_url }}" alt="poster">
+  <img class="w-25" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster">
   <p>{{ movie.title }}</p>
   {% for genres in movie.genre.all %}
     <p>{{ genres }}</p>
