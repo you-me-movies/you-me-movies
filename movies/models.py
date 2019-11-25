@@ -30,7 +30,6 @@ class Movie(models.Model):
     cast = models.ManyToManyField(Cast, related_name='cast', blank=True)
     director = models.CharField(max_length=30, blank=True)
 
-
     class Meta:
         ordering = ['-pk']
 
