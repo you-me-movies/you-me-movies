@@ -47,6 +47,19 @@ def review_delete(request, movie_pk, review_pk):
 
 
 @login_required
+def review_update(request, review_pk):
+    if request.method == 'POST':
+        review = ReviewForm(request.POST, instance=request.user)
+        if review.is_valid():
+            review.save()
+            return redirect('movies:detail')
+    else:
+        review = ReviewForm(instance=request.user)
+    context = {'review': review,}
+    return render(request, 'movies/detail.html', context)   
+
+
+@login_required
 def like(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
 

@@ -2,43 +2,58 @@
 {% load bootstrap4%}
 
 {% block content %}
-  <h1>DETAIL</h1>
-  <hr>
-  <img class="w-25" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster">
-  <p>{{ movie.title }}</p>
-  {% for genres in movie.genre.all %}
-    <p>{{ genres }}</p>
-  {% endfor %}
-  <p>{{ movie.audience }}</p>
-  <p>{{ movie.description }}</p>
-  <hr>
+<h1>DETAIL</h1>
+<hr>
+<img class="w-25" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster">
+<p>제목 : {{ movie.title }}</p>
+장르 :
+{% for genres in movie.genre_ids.all %}
+{{ genres }} |
+{% endfor %}<br>
+{% if movie.overview %}줄거리 :
+{{ movie.overview }}
+{% else %}
+줄거리를 입력해주세요 <a href="">입력</a>
+{% endif %}
+<p>평점 : {{ movie.vote_average }}</p>
+<hr>
 
-  {% for review in reviews %}
-    <div>
-      내용 : {{ review.content }} |
-      평점 : {{ review.score }} |
-      작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
+댓글 목록
+<br>
 
-      {% if request.user == review.user %}
-        <form action="{% url 'movies:delete' movie.id review.id %}" method="POST">
-          {% csrf_token %}
-          <input type="submit" value="Delete">
-        </form>
-      {% endif %}
-    
-    </div>
-  {% endfor %}
+{% for review in reviews %}
+<div>
+  <li>
+    내용 : {{ review.content }} |
+    평점 : {{ review.score }} |
+    작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
 
-  {{ user.is_authenticated }}
-  {% if user.is_authenticated %}
-  <form action="{% url 'movies:new' movie.id %}" method="POST">
-    {% csrf_token %}
-    {{ review_form }}
-    <input type="submit" value="submit">
-  </form>
-  {% else %}
-    <a href="#login"> [리뷰를 남기려면, 로그인하세요]</a>
-  {% endif %}
-  <hr>
-  <a href="{% url 'movies:index' %}">[BACK]</a>
-{% endblock content %}
+    {% if request.user == review.user %}
+    <form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
+      style="display: inline">
+      {% csrf_token %}
+      <input type="submit" value="삭제" class="btn btn-primary">
+      {% comment %} <input type="text" name="" id=""> {% endcomment %}
+    </form>
+    {% endif %}
+
+  </li>
+</div>
+{% endfor %}
+
+
+
+<div class="alert" role="alert" id="result"></div>
+
+{% if user.is_authenticated %}
+<form action="{% url 'movies:new' movie.id %}" method="POST">
+  {% csrf_token %}
+  {{ review_form }}
+  <input type="submit" value="submit">
+</form>
+{% else %}
+<a href="{% url 'accounts:login' %}"> [리뷰를 남기려면, 로그인하세요]</a>
+{% endif %}
+<hr>
+<a href="{% url 'movies:index' %}">[Main Page]</a>
+{% endblock %}
