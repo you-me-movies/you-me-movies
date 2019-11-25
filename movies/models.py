@@ -8,26 +8,34 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.name
-    
 
+
+class Cast(models.Model):
+    # cast_id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=50)
+    path = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.name
+    
+    
 class Movie(models.Model):
     title = models.CharField(max_length=30)
     overview = models.TextField()
     vote_average = models.IntegerField()
     genre_ids = models.ManyToManyField(Genre, related_name='movie_genre', blank=True)
-    poster_path = models.CharField(max_length=200)
+    poster_path = models.CharField(max_length=200, blank=True, null=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True)
+    trailer = models.CharField(max_length=50, blank=True, null=True)
+    cast = models.ManyToManyField(Cast, related_name='cast', blank=True)
+    director = models.CharField(max_length=30, blank=True)
+
 
     class Meta:
         ordering = ['-pk']
 
     def __str__(self):
         return self.title
-
-    # def movie_genres(self):
-    #     return 
-    
-
 
 
 class Review(models.Model):
@@ -37,4 +45,4 @@ class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['-pk']
+        ordering = ['pk']
