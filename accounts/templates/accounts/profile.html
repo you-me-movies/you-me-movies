@@ -1,6 +1,8 @@
 {% extends 'movies/base.html' %}
 {% block content %}
-<a href="{% url 'movies:index' %}">back</a>
+{% comment %} <button>Info</button> {% endcomment %}
+<a href="{% url 'movies:index' %}" type="button" class="btn btn-dark btn-sm">Main Page</a>
+<a href="{% url 'accounts:logout' %}" type="button" class="btn btn-dark btn-sm">로그아웃</a>
 <h1>{{ person.username }}'s Profile</h1>
 <hr>
 <h3>{{ person.username }}가 작성한 글</h3>
