@@ -65,6 +65,7 @@ def review_update(request, review_pk):
 def like(request, movie_pk):
     if request.is_ajax():
         movie = get_object_or_404(Movie, pk=movie_pk)
+
         if movie.like_users.filter(pk=request.user.pk).exists():
             movie.like_users.remove(request.user)
             liked = False
