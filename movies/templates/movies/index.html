@@ -2,36 +2,48 @@
 {% load static %}
 
 {% block content %}
-  <h1>Main Page</h1>
-  
-  <hr>
-  <div class="container">
-    <img class="w-25" src="{% static 'movies/images/cat.jpg' %}" alt="smaple_img">
-  </div>
-  {% for movie in movies %}
-    <a href="{% url 'movies:detail' movie.id %}">
-      <img class="w-25" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster_path">
-    </a>
-    <div>
-      {{ movie.title }} <br>
-      {% for genres in movie.genre.all %}
-        {{ genres }}
-      {% endfor %}
-      <br>
-      {{ movie.audience}} <br>
-      {{ movie.description }}
-      <hr>
-      <a href="{% url 'movies:like' movie.id %}">
-        {% if user in movie.like_users.all %}
-          <p>좋아요 누름</p>
-        {% else %}
-          <p>좋아요</p>
-        {% endif %}
-      </a>
-      {{ movie.like_users.all|length }} 명이 이 영화를 좋아합니다.
-    </div>
+<h1>Main Page</h1>
+<img class="w-25" src="{% static 'movies/images/cat.jpg' %}" alt="smaple_img">
+<hr>
+<div class="row">
 
-    
+{% for movie in movies %}
+<div class="card col-3 px-0 mr-1" style="width: 18rem; height: 50rem;">
+  <a href="{% url 'movies:detail' movie.id %}"><img
+      src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" class="card-img-top"
+      alt="poster_path"></a>
+  <div class="card-body">
+    {% if movie.overview %}
+    {% if movie.overview|length > 30  %}
+    <p class="card-text overflow-hidden">{{ movie.overview }}
+    </p>
+    {% endif %}
+    {% else %}
+    <p>줄거리 내용이 없습니다.</p>
+    {% endif %}
+  </div>
+  <div>
+    {{ movie.title }} <br>
+    {% for genres in movie.genre.all %}
+    {{ genres }}
+    {% endfor %}
+    <br>
+    {{ movie.audience}} <br>
+    {{ movie.description }}
     <hr>
-  {% endfor %}
+    <a href="{% url 'movies:like' movie.id %}">
+      {% if user in movie.like_users.all %}
+      <p>좋아요 누름</p>
+      {% else %}
+      <p>좋아요</p>
+      {% endif %}
+    </a>
+    {{ movie.like_users.all|length }} 명이 이 영화를 좋아합니다.
+  </div>
+</div>
+{% endfor %}
+
+</div>
+<hr>
 {% endblock  %}
+
