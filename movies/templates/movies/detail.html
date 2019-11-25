@@ -12,7 +12,13 @@
   <p>{{ movie.audience }}</p>
   <p>{{ movie.description }}</p>
   <hr>
-
+  
+  {% if user in movie.like_users.all %}
+    <i class="fas fa-heart like-button" style="color: crimson;" data-id="{{ movie.pk }}"></i>
+  {% else %}
+    <i class="fas fa-heart like-button"style="color: black;" data-id="{{ movie.pk }}"></i>
+  {% endif %}
+  <span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span>명이 이 글을 좋아합니다.
   {% for review in reviews %}
     <div>
       내용 : {{ review.content }} |
@@ -29,7 +35,7 @@
     </div>
   {% endfor %}
 
-  {{ user.is_authenticated }}
+
   {% if user.is_authenticated %}
   <form action="{% url 'movies:new' movie.id %}" method="POST">
     {% csrf_token %}
@@ -42,3 +48,34 @@
   <hr>
   <a href="{% url 'movies:index' %}">[BACK]</a>
 {% endblock content %}
+
+
+<script>
+  // 1. 각 게시글 별로 좋아요 버튼이 있으니, 모두 선택해야 한다.
+  const likebuttons = document.querySelectorAll('.like-button')
+  // 2. for Each 를 사용해서 각각의 좋아요 버튼을 클릭
+  likebuttons.forEach(button => {
+    button.addEventListener('click', function (event) {
+      console.log(event)
+      // event.taget.dataset.id 의 value 는 data-id 값이 들어 있다.
+      const movieId = event.target.dataset.id
+      // 해당 상세 게시글의 좋아요 요청을 보낸다.
+      axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+      axios.defaults.xsrfCookieName = 'csrftoken'
+      axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+      axios.post(`/movies/${movieId}/like/`)
+        .then(response => {
+          console.log(response)
+          document.querySelector(`#like-count-${movieId}`).innerText = response.data.count
+          if (response.data.liked) {
+            // True이면 , 누르게 된것 => 좋아요 색깔을 빨갛게
+            event.target.style.color = 'crimson'
+          } else {
+            //좋아요 색깔을 까맣게
+            event.target.style.color = 'black'
+          }
+        })
+        .catch(error => console.log(error))
+    })
+  })
+</script>

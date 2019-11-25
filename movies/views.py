@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from .models import Movie, Review
 from .forms import ReviewForm
 
+from django.http import JsonResponse, HttpResponseBadRequest
+
 # Create your views here.
 def index(request):
     movies = Movie.objects.all()
@@ -48,11 +50,16 @@ def review_delete(request, movie_pk, review_pk):
 
 @login_required
 def like(request, movie_pk):
-    movie = get_object_or_404(Movie, pk=movie_pk)
-
-    if movie.like_users.filter(pk=request.user.pk).exists():
-        movie.like_users.remove(request.user)
+    if request.is_ajax():
+        movie = get_object_or_404(Movie, pk=movie_pk)
+        if movie.like_users.filter(pk=request.user.pk).exists():
+            movie.like_users.remove(request.user)
+            liked = False
+        else:
+            movie.like_users.add(request.user)
+            liked = True
+        context = {'liked': liked, 'count': movie.like_users.count(),}
+        return JsonResponse(context)
     else:
-        movie.like_users.add(request.user)
-    return redirect('movies:index')
+        return HttpResponseBadRequest()
 
