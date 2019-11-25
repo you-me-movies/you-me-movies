@@ -2,64 +2,87 @@
 {% load bootstrap4%}
 
 {% block content %}
-  <h1>DETAIL</h1>
-  <hr>
-  <img class="w-25" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster">
-  <p>{{ movie.title }}</p>
-  {% for genres in movie.genre.all %}
-    <p>{{ genres }}</p>
-  {% endfor %}
-  <p>{{ movie.audience }}</p>
-  <p>{{ movie.description }}</p>
-  <hr>
-  
-  {% if user in movie.like_users.all %}
-    <i class="fas fa-heart like-button" style="color: crimson;" data-id="{{ movie.pk }}"></i>
-  {% else %}
-    <i class="fas fa-heart like-button"style="color: black;" data-id="{{ movie.pk }}"></i>
-  {% endif %}
-  <span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span>명이 이 글을 좋아합니다.
-  {% for review in reviews %}
-    <div>
-      내용 : {{ review.content }} |
-      평점 : {{ review.score }} |
-      작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
-
-      {% if request.user == review.user %}
-        <form action="{% url 'movies:delete' movie.id review.id %}" method="POST">
-          {% csrf_token %}
-          <input type="submit" value="Delete">
-        </form>
-      {% endif %}
-    
-    </div>
-  {% endfor %}
+<h1>DETAIL</h1>
+<hr>
+<!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
+{% if movie.trailer != null %}
+<iframe width="100%" height="641" src="https://www.youtube.com/embed/{{ movie.trailer }}/" frameborder="0" allowfullscreen class="mb-0"></iframe><hr>
+{% endif %}
 
 
-  {% if user.is_authenticated %}
-  <form action="{% url 'movies:new' movie.id %}" method="POST">
-    {% csrf_token %}
-    {{ review_form }}
-    <input type="submit" value="submit">
-  </form>
-  {% else %}
-    <a href="#login"> [리뷰를 남기려면, 로그인하세요]</a>
-  {% endif %}
-  <hr>
-  <a href="{% url 'movies:index' %}">[BACK]</a>
-{% endblock content %}
+
+<p>제목 : {{ movie.title }}</p><hr>
+
+감독 : {{ movie.director }}<hr>
+
+출연진 : 
+{% for person in movie.cast.all %}
+  <a href="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">{{ person.name }}</a> |
+{% endfor %}<hr>
+
+장르 :
+{% for genres in movie.genre_ids.all %}
+{{ genres }} |
+{% endfor %}<hr>
+
+{% if movie.overview %}줄거리 :
+{{ movie.overview }}
+
+{% else %}
+줄거리를 입력해주세요 <a href="">입력</a>
+{% endif %}<hr>
+
+
+<p>평점 : {{ movie.vote_average }}</p>
+<hr>
+
+댓글 목록
+<br>
+
+{% for review in reviews %}
+<div>
+  <li>
+    내용 : {{ review.content }} |
+    평점 : {{ review.score }} |
+    작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
+
+    {% if request.user == review.user %}
+    <form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
+      style="display: inline">
+      {% csrf_token %}
+      <input type="submit" value="삭제" class="btn btn-primary">
+      {% comment %} <input type="text" name="" id=""> {% endcomment %}
+    </form>
+    {% endif %}
+
+  </li>
+</div>
+{% endfor %}
+
+
+
+<div class="alert" role="alert" id="result"></div>
+
+{% if user.is_authenticated %}
+<form action="{% url 'movies:new' movie.id %}" method="POST">
+  {% csrf_token %}
+  {{ review_form }}
+  <input type="submit" value="submit">
+</form>
+{% else %}
+<a href="{% url 'accounts:login' %}"> [리뷰를 남기려면, 로그인하세요]</a>
+{% endif %}
+<hr>
+<a href="{% url 'movies:index' %}">[Main Page]</a>
+{% endblock %}
 
 
 <script>
-  // 1. 각 게시글 별로 좋아요 버튼이 있으니, 모두 선택해야 한다.
   const likebuttons = document.querySelectorAll('.like-button')
-  // 2. for Each 를 사용해서 각각의 좋아요 버튼을 클릭
   likebuttons.forEach(button => {
     button.addEventListener('click', function (event) {
       console.log(event)
-      // event.taget.dataset.id 의 value 는 data-id 값이 들어 있다.
       const movieId = event.target.dataset.id
-      // 해당 상세 게시글의 좋아요 요청을 보낸다.
       axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
       axios.defaults.xsrfCookieName = 'csrftoken'
       axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -68,10 +91,8 @@
           console.log(response)
           document.querySelector(`#like-count-${movieId}`).innerText = response.data.count
           if (response.data.liked) {
-            // True이면 , 누르게 된것 => 좋아요 색깔을 빨갛게
             event.target.style.color = 'crimson'
           } else {
-            //좋아요 색깔을 까맣게
             event.target.style.color = 'black'
           }
         })
