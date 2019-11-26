@@ -1,0 +1,11 @@
+{% extends 'movies/base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+{{ movie_ids }}
+
+{% for movie in movies %}
+{{ movie.genre_ids }}
+
+{% endfor %}
+{% endblock content %}
