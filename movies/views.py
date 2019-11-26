@@ -117,6 +117,7 @@ def update(request, movie_pk):
 
 
 def recommend(request):
+    # print(request.user.user_set.all())
     if request.user.is_authenticated:
         # movie_ids = request.user.review_set.filter(score__gte=5).values('movie_id')[:5]
         scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('movie_id')
@@ -126,7 +127,7 @@ def recommend(request):
             if score.get('movie_id') in movies.all():
                 genres[score.get('movie_id')].add(score.get('genre_ids'))
                 
-        
+
         context = {'scores': scores, 'movies': movies, 'genres': genres}
         return render(request, 'movies/recommend.html', context)    
 
