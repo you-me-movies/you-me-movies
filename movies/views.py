@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 
 from .models import Movie, Review
-from .forms import ReviewForm
+from .forms import ReviewForm, MovieForm
 
 from django.http import JsonResponse, HttpResponseBadRequest
 
@@ -77,3 +78,35 @@ def like(request, movie_pk):
     else:
         return HttpResponseBadRequest()
 
+
+@staff_member_required
+def create(request):
+    if request.method == 'POST':
+        form = MovieForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.user = request.user
+            article.save()                
+        return redirect(article)         
+    else:
+        form = MovieForm()
+    context = {'form': form,}
+    return render(request, 'movies/form.html', context)
+
+
+@staff_member_required
+def update(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = MovieForm(request.POST, instance=movie)
+            if form.is_valid():
+                movie.save()
+                return redirect('movies:detail', movie_pk)
+        else:
+
+            form = MovieForm(instance=movie)
+    else:
+        return redirect('movies:detail', movie_pk)
+    context = {'form': form, 'movie': movie,}
+    return render(request, 'movies/form.html', context)

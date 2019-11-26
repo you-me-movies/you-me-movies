@@ -5,6 +5,10 @@
 <h1>Main Page</h1>
 <img class="w-25" src="{% static 'movies/images/cat.jpg' %}" alt="smaple_img">
 <hr>
+{% if user.is_staff %}
+<div class=""><a href="{% url 'movies:create' %}">[NEW]</a></div>
+{% endif %}
+<hr>
 <div class="row">
   {% for movie in movies %}
   <div class="card col-3 px-0 mr-1 ml-3 my-2 bg-dark" style="width: 18rem; height: 35rem;">
