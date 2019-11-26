@@ -84,6 +84,3 @@ def update(request, user_pk):
     return render(request, 'accounts/auth_form.html', context)
 
 
-# def recommend(request, genre_pk):
-#     genre = get_object_or_404(get_user_model(), pk=genre_pk)
-#     user = request.user.

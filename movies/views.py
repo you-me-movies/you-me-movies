@@ -4,13 +4,16 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
-from .models import Movie, Review
+from .models import Movie, Review, Genre
 from .forms import ReviewForm, MovieForm
 from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.generic.detail import SingleObjectMixin
+
 
 # Create your views here.
 def first_page(request):
     return render(request, 'movies/first_page.html')
+
 
 def index(request):
     movies = Movie.objects.all()
@@ -111,3 +114,21 @@ def update(request, movie_pk):
         return redirect('movies:detail', movie_pk)
     context = {'form': form, 'movie': movie,}
     return render(request, 'movies/form.html', context)
+
+
+def recommend(request):
+    if request.user.is_authenticated:
+        movie_ids = request.user.review_set.filter(score__gte=5).values('movie_id')[:5]
+        movies = Movie.objects.values('genre_ids')
+        # if reviews:
+        #     genres = Movie.objects.filter(id=reviews).values('genre_ids')
+            
+
+        context = {'movie_ids': movie_ids, 'movies': movies,}
+        return render(request, 'movies/recommend.html', context)    
+        # else:
+        #     context = {'reviews': reviews,}
+        #     return redirect('movies:recommend')
+
+    else:
+        return redirect('movies:index')
