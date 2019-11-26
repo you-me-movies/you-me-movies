@@ -1,6 +1,6 @@
 {% extends 'movies/base.html' %}
 {% load bootstrap4%}
-
+{% bootstrap_css %}
 {% block content %}
 <div class="card p-5" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
 <h1>DETAIL</h1>
@@ -26,15 +26,15 @@
 출연진 :
 
 
+<div class="container">
+<div class="row">
 {% for person in movie.cast.all %}
-
-
-<p>
+<p class="col-4">
   <a class="btn btn-primary" data-toggle="collapse" href="#{{ person.id }}" role="button" aria-expanded="false" aria-controls="{{ person.name}}">
   {{ person.name }}</a>
 </p>
 <div class="collapse" id="{{ person.id }}">
-  <div class="card card-body w-25">
+  <div class="card card-body">
   {% if person.path != none %}
     <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
   {% else %}
@@ -44,7 +44,8 @@
   </div>
 </div>
 {% endfor %}
-
+</div>
+</div>
 장르 :
 {% for genres in movie.genre_ids.all %}
 {{ genres }} |
@@ -95,12 +96,81 @@
   {% csrf_token %}
   {{ review_form }}
   <input type="submit" value="submit">
+  <h1>Pure CSS Star Rating</h1>
+  <div class="rating">
+    <input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
+    <input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
+    <input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
+    <input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
+    <input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
+  </div>
 </form>
 {% else %}
 <a href="{% url 'accounts:login' %}"> [리뷰를 남기려면, 로그인하세요]</a>
 {% endif %}
 <hr>
+<div class="rating"></div>
 </div>
 
 
 {% endblock %}
+
+
+<style>
+body {
+	background: #F1F1F1;
+	
+	h1 {
+    	font-family: 'Lobster', cursive;
+		margin: 50px 20px 40px;
+		font-size: 50px;
+		letter-spacing: 0.5px;
+		color: #999999;
+		text-align: center;
+	}
+}
+
+$stars: 5;
+$star-size: 40px;
+$star-spacing: 2px;
+$star-on-color: #F9DF4A;
+$star-off-color: #CCCCCC;
+
+.rating {
+	width: ($star-size * $stars) + ($star-spacing * ($stars - 1));
+	height: $star-size;
+	margin: 0 auto;
+	padding: 40px 50px;
+	border: 1px solid #CCCCCC;
+	background: #F9F9F9;
+
+	label {
+		float: right;
+		position: relative;
+		width: $star-size;
+		height: $star-size;
+		cursor: pointer;
+		
+		&:not(:first-of-type) {
+			padding-right: $star-spacing;
+		}
+		
+		&:before {
+			content: "\2605";
+			font-size: $star-size + 2px;
+			color: $star-off-color;
+			line-height: 1;
+		}
+	}
+	
+	input {
+		display: none;
+	}
+	
+	input:checked ~ label:before,
+	&:not(:checked) > label:hover:before,
+	&:not(:checked) > label:hover ~ label:before {
+		color: $star-on-color;
+	}
+}
+</style>
