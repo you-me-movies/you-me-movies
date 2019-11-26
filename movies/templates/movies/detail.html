@@ -3,6 +3,9 @@
 
 {% block content %}
 <h1>DETAIL</h1>
+{% if user.is_staff %}
+<div class=""><a href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
+{% endif %}
 <hr>
 <!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
 {% if movie.trailer != null %}
@@ -21,14 +24,18 @@
 <hr>
 
 출연진 :
+
+
 {% for person in movie.cast.all %}
-<hr>
+
+
 <p>
-  <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+  <a class="btn btn-primary" data-toggle="collapse" href="#{{ person.id }}" role="button" aria-expanded="false" aria-controls="{{ person.name}}">
   {{ person.name }}</a>
 </p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
+<div class="collapse" id="{{ person.id }}">
+
+  <div class="card card-body w-25">
     <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
   </div>
 </div>
@@ -67,7 +74,6 @@
       style="display: inline">
       {% csrf_token %}
       <input type="submit" value="삭제" class="btn btn-primary">
-      {% comment %} <input type="text" name="" id=""> {% endcomment %}
     </form>
     {% endif %}
 

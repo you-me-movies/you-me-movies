@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .forms import CustomUserChangeForm, CustomUserCreationForm, CustomUserChangeFormAdmin
 
 
 # Create your views here.
@@ -47,8 +48,10 @@ def logout(request):
     return redirect('movies:index')
 
 
+@login_required
 def profile(request, username):
     person = get_object_or_404(get_user_model(), username=username)
+
     context = {'person': person,}
     return render(request, 'accounts/profile.html', context)
 
@@ -65,3 +68,22 @@ def follow(request, username, user_pk):
             person.followers.add(user)
         
     return redirect('accounts:profile', username)
+
+
+@staff_member_required
+def update(request, user_pk):
+    person = get_object_or_404(get_user_model(), pk=user_pk)
+    if request.method == 'POST':
+        form = CustomUserChangeFormAdmin(request.POST, instance=person)
+        if form.is_valid():
+            form.save()
+            return redirect('movies:index')
+    else:
+        form = CustomUserChangeFormAdmin(instance=person)
+    context = {'form': form,}
+    return render(request, 'accounts/auth_form.html', context)
+
+
+# def recommend(request, genre_pk):
+#     genre = get_object_or_404(get_user_model(), pk=genre_pk)
+#     user = request.user.
