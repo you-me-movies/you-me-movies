@@ -2,10 +2,9 @@
 {% load bootstrap4 %}
 
 {% block content %}
-{{ movie_ids }}
+{{ scores }}
+{{ movies }}
+{{ genres }}
 
-{% for movie in movies %}
-{{ movie.genre_ids }}
 
-{% endfor %}
 {% endblock content %}

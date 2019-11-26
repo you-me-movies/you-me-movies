@@ -42,6 +42,7 @@ class Review(models.Model):
     score = models.IntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    genres = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['pk']

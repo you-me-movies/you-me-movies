@@ -88,10 +88,10 @@ def create(request):
     if request.method == 'POST':
         form = MovieForm(request.POST)
         if form.is_valid():
-            article = form.save(commit=False)
-            article.user = request.user
-            article.save()                
-        return redirect(article)         
+            movie = form.save(commit=False)
+            movie.user = request.user
+            movie.save()                
+        return redirect('movies:index')         
     else:
         form = MovieForm()
     context = {'form': form,}
@@ -118,17 +118,17 @@ def update(request, movie_pk):
 
 def recommend(request):
     if request.user.is_authenticated:
-        movie_ids = request.user.review_set.filter(score__gte=5).values('movie_id')[:5]
-        movies = Movie.objects.values('genre_ids')
-        # if reviews:
-        #     genres = Movie.objects.filter(id=reviews).values('genre_ids')
-            
-
-        context = {'movie_ids': movie_ids, 'movies': movies,}
+        # movie_ids = request.user.review_set.filter(score__gte=5).values('movie_id')[:5]
+        scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('movie_id')
+        movies = Movie.objects.values('id')
+        genres = {}
+        for score in scores:
+            if score.get('movie_id') in movies.all():
+                genres[score.get('movie_id')].add(score.get('genre_ids'))
+                
+        
+        context = {'scores': scores, 'movies': movies, 'genres': genres}
         return render(request, 'movies/recommend.html', context)    
-        # else:
-        #     context = {'reviews': reviews,}
-        #     return redirect('movies:recommend')
 
     else:
         return redirect('movies:index')
