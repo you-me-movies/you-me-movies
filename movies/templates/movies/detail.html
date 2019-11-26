@@ -2,9 +2,10 @@
 {% load bootstrap4%}
 
 {% block content %}
+<div class="card p-5" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
 <h1>DETAIL</h1>
 {% if user.is_staff %}
-<div class=""><a href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
+<div><a href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
 {% endif %}
 <hr>
 <!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
@@ -33,12 +34,15 @@
   {{ person.name }}</a>
 </p>
 <div class="collapse" id="{{ person.id }}">
-
   <div class="card card-body w-25">
+  {% if person.path != none %}
     <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
+  {% else %}
+    <img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
+    <p class="mb-0" style="color: black; font-size: 20px;">이미지가 없습니다.</p>
+  {% endif %}
   </div>
 </div>
--->
 {% endfor %}
 
 장르 :
@@ -96,7 +100,7 @@
 <a href="{% url 'accounts:login' %}"> [리뷰를 남기려면, 로그인하세요]</a>
 {% endif %}
 <hr>
-
+</div>
 
 
 {% endblock %}

@@ -10,7 +10,7 @@
   <script src="https://kit.fontawesome.com/dacf7dcd9c.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   {% bootstrap_css %}
-  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=El+Messiri&display=swap" rel="stylesheet">
   <title>Document</title>
   <style>
     body {
@@ -41,7 +41,7 @@
       }
     }
     h1 {
-      font-family: 'Noto Sans JP', sans-serif;
+      font-family: 'El Messiri', sans-serif;
       font-size: 50px;
       color: yellow;
     }
@@ -60,7 +60,11 @@
             {% comment %} <p class="card-text">영화 추천을 위해 로그인 해주세요</p> {% endcomment %}
             <div class="row justify-content-center">
               <a href="{% url 'accounts:signup' %}" class="btn btn-primary">처음이예요</a>
+            </div>
+            <div class="row justify-content-center">
               <a href="{% url 'accounts:login' %}" class="btn btn-primary">로그인할래요</a>
+            </div>
+            <div class="row justify-content-center">
               <a href="{% url 'movies:index' %}" class="btn btn-primary">그냥 둘러볼래요</a>
             </div>
           </div>
@@ -68,8 +72,9 @@
       </div>
     </div>
   </section>
-
-
+  <div>
+  <!--<img src="https://media.giphy.com/media/o3Vt7LBQZa8pi/giphy.gif" alt="xxxx" width="200" height="200";>-->
+  </div>
   {% bootstrap_javascript jquery='full' %}
 </body>
 

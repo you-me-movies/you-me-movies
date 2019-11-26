@@ -2,6 +2,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
+<div class="card mt-5 mx-auto text-center p-3" style="background-color:rgba(201, 76, 76, 0.7); width: 26rem">
   {% if request.resolver_match.url_name == 'signup' %}
     <h1>회원가입</h1>
   {% elif request.resolver_match.url_name == 'update' %}
@@ -9,11 +10,12 @@
   {% else %}
     <h1>비밀번호 변경</h1>
   {% endif %}
-
+  <div style="color: black;">
   <form action="" method="POST">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons submit="Submit" reset="Cancel" %}{% endbuttons %}
   </form>
-
+  </div>
+</div>
 {% endblock  %}

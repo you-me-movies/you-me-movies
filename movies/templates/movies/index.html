@@ -1,35 +1,54 @@
 {% extends 'movies/base.html' %}
 {% load static %}
 
-{% block content %}
-<h1>Main Page</h1>
-<hr>
-{% if user.is_staff %}
-<div class=""><a href="{% url 'movies:create' %}">[NEW]</a></div>
-{% endif %}
-<hr>
-<div class="row">
-  {% for movie in movies %}
-  <div class="card col-3 px-0 mr-1 ml-3 my-2 bg-dark" style="width: 18rem; height: 35rem;">
-    <a href="{% url 'movies:detail' movie.id %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="card-img-top" alt="#"></a>
-    <div class="card-body text-info">
-      {{ movie.title }}
-      <hr>
-      {% if user.is_authenticated %}
-      {% if user in movie.like_users.all %}
-      <i class="fas fa-heart fa-lg like-button" style="color: crimson;" data-id="{{ movie.pk }}"></i>
-      {% else %}
-      <i class="fas fa-heart fa-lg like-button" style="color: black;" data-id="{{ movie.pk }}"></i>
-      {% endif %}
-      {% endif %}
-      <!-- {{ movie.like_users.all|length }} likes -->
-      <i id="like-count-{{ movie.pk }}"></i> likes
+<style>
+
+</style>
+
+<div class="main-body">
+  {% block content %}
+  <div class="main">
+    <h1>Main Page</h1>
+    <hr>
+    {% if user.is_staff %}
+    <a href="{% url 'movies:create' %}" type="button" class="btn btn-dark btn-sm">NEW</a>
+    {% endif %}
+    <hr>
+    <div class="row">
+      {% for movie in movies %}
+      <div class="card col-3 px-0 bg-dark" style="width: 10rem;">
+        <a href="{% url 'movies:detail' movie.id %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"
+            class="card-img-top" alt="#"></a>
+        <div class="card-body text-info">
+          {{ movie.title }}
+          <hr>
+          {% if user.is_authenticated %}
+          {% if user in movie.like_users.all %}
+          <i class="fas fa-heart fa-lg like-button" style="color: crimson;" data-id="{{ movie.pk }}"></i>
+          <span id="like-count-{{ movie.pk }}"></span> likes</i>
+          {% else %}
+          <i class="fas fa-heart fa-lg like-button" style="color: black;" data-id="{{ movie.pk }}"></i>
+          <span id="like-count-{{ movie.pk }}"></span> likes</i>
+          {% endif %}
+          {% endif %}
+          <!-- {{ movie.like_users.all|length }} likes -->
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+    <hr>
+    <div class="sidenav">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#clients">Clients</a>
+      <a href="#contact">Contact</a>
     </div>
   </div>
-  {% endfor %}
-
 </div>
-<hr>
+
+
+
 <script>
   const likeButtons = document.querySelectorAll('.like-button')
   likeButtons.forEach(button => {
@@ -61,5 +80,51 @@
     display: -webkit-box;
     webkit-line-clamp: 3;
     webkit-box-orient: vertical;
+  }
+
+  .main-body {
+    font-family: "Lato", sans-serif;
+  }
+
+  .sidenav {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+
+  .sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+  }
+
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+
+  .main {
+    margin-left: 160px;
+    /* Same as the width of the sidenav */
+    font-size: 28px;
+    /* Increased text to enable scrolling */
+    padding: 0px 10px;
+  }
+
+  @media screen and (max-height: 450px) {
+    .sidenav {
+      padding-top: 15px;
+    }
+
+    .sidenav a {
+      font-size: 18px;
+    }
   }
 </style>
