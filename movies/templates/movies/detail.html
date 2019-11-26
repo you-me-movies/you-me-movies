@@ -11,7 +11,7 @@
 {% if movie.trailer != null %}
 <iframe width="100%" height="641" src="https://www.youtube.com/embed/{{ movie.trailer }}/" frameborder="0"
   allowfullscreen class="mb-0"></iframe>
-  <a href="{% url 'movies:index' %}" class="float-right">[Main Page]</a>
+<a href="{% url 'movies:index' %}" class="float-right">[Main Page]</a>
 <hr>
 {% endif %}
 
@@ -22,7 +22,6 @@
 
 감독 : {{ movie.director }}
 <hr>
-
 출연진 :
 
 
@@ -39,6 +38,7 @@
     <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
   </div>
 </div>
+-->
 {% endfor %}
 
 장르 :
@@ -73,7 +73,8 @@
     <form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
       style="display: inline">
       {% csrf_token %}
-      <input type="submit" value="삭제" class="btn btn-primary">
+      <input type="submit" value="삭제" class="btn btn-primary btn-sm">
+
     </form>
     {% endif %}
 
@@ -99,5 +100,3 @@
 
 
 {% endblock %}
-
-

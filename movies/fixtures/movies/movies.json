@@ -1140,26 +1140,6 @@
   },
   {
     "model": "movies.movie",
-    "pk": 551807,
-    "fields": {
-      "title": "Untitled Fox/Marvel Film II",
-      "overview": "",
-      "vote_average": 0,
-      "genre_ids": [
-        28,
-        12,
-        878
-      ],
-      "poster_path": null,
-      "trailer": null,
-      "cast": [
-        
-      ],
-      "director": "James Gunn"
-    }
-  },
-  {
-    "model": "movies.movie",
     "pk": 87101,
     "fields": {
       "title": "터미네이터: 제니시스",

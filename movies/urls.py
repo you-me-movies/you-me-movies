@@ -3,8 +3,9 @@ from . import views
 
 app_name = 'movies'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('create/', views.create, name='create'),
+    path('', views.first_page, name='first_page'),
+    path('index/', views.index, name='index'),
+    path('index/create/', views.create, name='create'),
     path('<int:movie_pk>/', views.detail, name='detail'),
     path('<int:movie_pk>/update/', views.update, name='update'),
     path('<int:movie_pk>/reviews/new/', views.review_create, name='new'),
