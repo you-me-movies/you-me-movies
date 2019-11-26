@@ -11,10 +11,12 @@
     <div class="card-body text-info">
       {{ movie.title }}
       <hr>
+      {% if user.is_authenticated %}
       {% if user in movie.like_users.all %}
       <i class="fas fa-heart fa-lg like-button" style="color: crimson;" data-id="{{ movie.pk }}"></i>
       {% else %}
       <i class="fas fa-heart fa-lg like-button" style="color: black;" data-id="{{ movie.pk }}"></i>
+      {% endif %}
       {% endif %}
       <!-- {{ movie.like_users.all|length }} likes -->
       <i id="like-count-{{ movie.pk }}"></i> likes

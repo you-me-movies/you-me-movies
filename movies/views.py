@@ -3,13 +3,14 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
 from .models import Movie, Review
 from .forms import ReviewForm
-
 from django.http import JsonResponse, HttpResponseBadRequest
 
 # Create your views here.
+def first_page(request):
+    return render(request, 'movies/first_page.html')
+
 def index(request):
     movies = Movie.objects.all()
     context = {'movies': movies,}
