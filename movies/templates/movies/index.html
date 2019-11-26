@@ -3,7 +3,6 @@
 
 {% block content %}
 <h1>Main Page</h1>
-<img class="w-25" src="{% static 'movies/images/cat.jpg' %}" alt="smaple_img">
 <hr>
 <div class="row">
   {% for movie in movies %}
@@ -14,13 +13,11 @@
       <hr>
       {% if user in movie.like_users.all %}
       <i class="fas fa-heart fa-lg like-button" style="color: crimson;" data-id="{{ movie.pk }}"></i>
-      <hr>
       {% else %}
       <i class="fas fa-heart fa-lg like-button" style="color: black;" data-id="{{ movie.pk }}"></i>
-      <hr>
       {% endif %}
       <!-- {{ movie.like_users.all|length }} likes -->
-      <span id="like-count-{{ movie.pk }}"></span> likes
+      <i id="like-count-{{ movie.pk }}"></i> likes
     </div>
   </div>
   {% endfor %}

@@ -8,6 +8,7 @@
 <h3>{{ person.username }}가 작성한 글</h3>
 
 <div class="row">
+  {% with movies=person.movie_set.all%}
   {% for movie in movies %}
   <div class="col-4 my-2">
     <div class="card">
@@ -21,10 +22,12 @@
   </div>
 
   {% endfor %}
+  {% endwith %}
 </div>
-
+{{ user.comment }}
 <h3 class="text-center">{{ person.username }}가 작성한 댓글</h3>
 <div class="row">
+{% with comments=person.content_set.all%}
   {% for comment in comments %}
   <div class="col-12 my-2">
     <div class="card">
@@ -37,6 +40,7 @@
     </div>
   </div>
   {% endfor %}
+  {% endwith %}
 </div>
 <div class="jumbotron text-center">
   <h1 class="display-4">{{ person.username }}</h1>
