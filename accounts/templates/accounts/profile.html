@@ -4,7 +4,9 @@
 <a href="{% url 'accounts:logout' %}" type="button" class="btn btn-dark btn-sm">로그아웃</a>
 <h1>{{ person.username }}'s Profile</h1>
 {% if user.is_staff %}
+{% if person.username != user.username %}
 <a href="{% url 'accounts:update' person.id %}"><p>권한부여</p></a>
+{% endif %}
 {% endif %}
 <hr>
 
@@ -12,7 +14,7 @@
 <div class="row">
   {% for comment in person.review_set.all %}
   <div class="col-12 my-2">
-    <div class="card">
+    <div class="card" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
       <div class="card-body">
         <blockquote class="blockquote mb-0">
           <p>내용 : {{ comment.content }}</p>
@@ -24,7 +26,7 @@
   </div>
   {% endfor %}
 </div>
-<div class="jumbotron text-center">
+<div class="jumbotron text-center" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
   <h1 class="display-4">{{ person.username }}</h1>
   {% with followers=person.followers.all followings=person.followings.all %}
   <p class="lead">
