@@ -2,9 +2,16 @@
 {% load bootstrap4 %}
 
 {% block content %}
-{{ scores }}
+{{ user.review_set.all }}
+{% for review in user.review_set.all %}
+{{ review.genres }}
+{% endfor %}
+{% comment %} {{ scores }}
 {{ movies }}
-{{ genres }}
+{% for movie in movies.movie_id.all %}
+{{movie.title}}
+{% endfor %}
+{{ genres }} {% endcomment %}
 
 
 {% endblock content %}
