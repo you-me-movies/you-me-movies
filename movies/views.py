@@ -8,7 +8,7 @@ from .models import Movie, Review, Genre
 from .forms import ReviewForm, MovieForm
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.generic.detail import SingleObjectMixin
-
+from IPython import embed
 
 # Create your views here.
 def first_page(request):
@@ -34,9 +34,11 @@ def detail(request, movie_pk):
 def review_create(request, movie_pk):
     if request.user.is_authenticated:
         review_form = ReviewForm(request.POST)
+        genres = Movie.objects.filter(pk=movie_pk).values('genre_ids')[0]
         if review_form.is_valid():
             review = review_form.save(commit=False)
             review.movie_id = movie_pk
+            review.genres_id = genres['genre_ids']
             review.user = request.user
             review.save()
 
@@ -117,17 +119,18 @@ def update(request, movie_pk):
 
 
 def recommend(request):
+    # print(request.user.user_set.all())
     if request.user.is_authenticated:
         # movie_ids = request.user.review_set.filter(score__gte=5).values('movie_id')[:5]
-        scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('movie_id')
-        movies = Movie.objects.values('id')
-        genres = {}
-        for score in scores:
-            if score.get('movie_id') in movies.all():
-                genres[score.get('movie_id')].add(score.get('genre_ids'))
+        scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('genres_id')
+        movies = Movie.objects.filter(genre_ids=scores[0].get('genres_id'))[:10]
+        # genres = {}
+        # for score in scores:
+        #     if score.get('movie_id') in movies.all():
+        #         genres[score.get('movie_id')].add(score.get('genre_ids'))
                 
-        
-        context = {'scores': scores, 'movies': movies, 'genres': genres}
+
+        context = {'scores': scores, 'movies': movies}
         return render(request, 'movies/recommend.html', context)    
 
     else:
