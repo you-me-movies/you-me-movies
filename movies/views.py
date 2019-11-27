@@ -12,15 +12,18 @@ from IPython import embed
 
 # Create your views here.
 def first_page(request):
+    # if request.user.is_authenticated:
     scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('genres_id')
     context = {'scores': scores}
     return render(request, 'movies/first_page.html', context)
+    # else:
+    #     return redirect('movies:first_page')
 
 
 def index(request):
-    
+    genres = Genre.objects.all()
     movies = Movie.objects.all()
-    context = {'movies': movies,}
+    context = {'movies': movies, 'genres': genres,}
     return render(request, 'movies/index.html', context)
 
 
@@ -121,6 +124,7 @@ def update(request, movie_pk):
     return render(request, 'movies/form.html', context)
 
 
+@login_required
 def recommend(request):
     # print(request.user.user_set.all())
     if request.user.is_authenticated:
@@ -139,4 +143,8 @@ def recommend(request):
         else:
             return redirect('movies:index')
     else:
+        # user = request.user
+        # review = get_object_or_404(Review)
+        # context = {'review': review,}
+        # return render(request, 'movies:index', context)
         return redirect('movies:index')

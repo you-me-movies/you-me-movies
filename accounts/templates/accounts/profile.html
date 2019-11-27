@@ -17,7 +17,8 @@
     <div class="card" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
       <div class="card-body">
         <blockquote class="blockquote mb-0">
-          <p>내용 : {{ comment.content }}</p>
+          <p>영화 제목 : {{ comment.movie }}</p>
+          <p>댓글 : {{ comment.content }}</p>
           <p>평점 : {{ comment.score }}</p>
           <footer class="blockquote-footer">{{ comment.created_at|date:"SHORT_DATE_FORMAT" }}</footer>
         </blockquote>
