@@ -3,7 +3,6 @@ from django.conf import settings
 
 # Create your models here.
 class Genre(models.Model):
-    genre_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -24,9 +23,9 @@ class Movie(models.Model):
     overview = models.TextField()
     vote_average = models.IntegerField()
     genre_ids = models.ManyToManyField(Genre, related_name='movie_genre', blank=True)
-    poster_path = models.CharField(max_length=200, blank=True, null=True)
+    poster_path = models.CharField(max_length=200, null=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True)
-    trailer = models.CharField(max_length=50, blank=True, null=True)
+    trailer = models.CharField(max_length=50, null=True)
     cast = models.ManyToManyField(Cast, related_name='cast', blank=True)
     director = models.CharField(max_length=30, blank=True)
 
