@@ -57,7 +57,7 @@
             {% comment %} <p class="card-text">영화 추천을 위해 로그인 해주세요</p> {% endcomment %}
             <div class="row justify-content-center mb-2">
             
-              <a href="{% url 'accounts:signup' %}" class="btn btn-secondary"><i class="fas fa-car-alt"></i>  추천 영화 목록(수정필요)</a>
+              <a href="{% url 'movies:recommend' %}" class="btn btn-secondary"><i class="fas fa-car-alt"></i>  추천 영화 목록(수정필요)</a>
             </div>
             <div class="row justify-content-center">
               <a href="{% url 'movies:index' %}" class="btn btn-secondary"><i class="fas fa-eye"></i>  그냥 둘러볼래요</a>
@@ -93,20 +93,3 @@
 </body>
 
 </html>
-
-
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
-  <defs>
-    <mask id="MASK" maskunits="userSpaceOnUse"
-              maskcontentunits="userSpaceOnUse">
-      <image 
-        xlink:href="https://media.giphy.com/media/tIwmTQ64D52XTuL8xd/giphy.gif" 
-        height="100%"
-        width="100%"/>
-    </mask>      
-  </defs>
-  <g mask="url(#MASK)">
-  <image x="0" y="0%" class="space" href="https://media.giphy.com/media/MXQnyEQwBJ6eTj90L5/giphy.gif" 
-        height="100%" width="100%"/>
-  </g>
-</svg>
