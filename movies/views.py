@@ -10,6 +10,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.generic.detail import SingleObjectMixin
 from IPython import embed
 
+
 # Create your views here.
 def first_page(request):
     # if request.user.is_authenticated:
