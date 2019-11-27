@@ -2,10 +2,13 @@
 {% load bootstrap4 %}
 
 {% block content %}
-{{ user.review_set.all }}
-{% for review in user.review_set.all %}
-{{ review.genres }}
+{{ scores }}
+{% for movie in movies %}
+<img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"
+            class="card-img-top" alt="#">
 {% endfor %}
+
+
 {% comment %} {{ scores }}
 {{ movies }}
 {% for movie in movies.movie_id.all %}
