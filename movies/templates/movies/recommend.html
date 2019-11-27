@@ -2,10 +2,9 @@
 {% load bootstrap4 %}
 
 {% block content %}
-{{ scores }}
+
 {% for movie in movies %}
-<img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"
-            class="card-img-top" alt="#">
+<img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="card-img-top" alt="#">
 {% endfor %}
 
 

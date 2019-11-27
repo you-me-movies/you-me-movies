@@ -14,7 +14,7 @@
     <hr>
     <div class="row">
       {% for movie in movies %}
-      <div class="card col-3 px-0 mr-2 mb-2 bg-dark" style="width: 10rem;">
+      <div class="card col-3 px-0 mr-2 mb-2 bg-dark data-toggle="tooltip" data-placement="top" title= " style="width: 10rem;">
         <a href="{% url 'movies:detail' movie.id %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"
             class="card-img-top" alt="#"></a>
         <div class="card-body text-info">

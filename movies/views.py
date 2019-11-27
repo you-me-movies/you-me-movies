@@ -12,10 +12,13 @@ from IPython import embed
 
 # Create your views here.
 def first_page(request):
-    return render(request, 'movies/first_page.html')
+    scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('genres_id')
+    context = {'scores': scores}
+    return render(request, 'movies/first_page.html', context)
 
 
 def index(request):
+    
     movies = Movie.objects.all()
     context = {'movies': movies,}
     return render(request, 'movies/index.html', context)
@@ -123,15 +126,17 @@ def recommend(request):
     if request.user.is_authenticated:
         # movie_ids = request.user.review_set.filter(score__gte=5).values('movie_id')[:5]
         scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('genres_id')
-        movies = Movie.objects.filter(genre_ids=scores[0].get('genres_id'))[:10]
+        if scores.count():
+            movies = Movie.objects.filter(genre_ids=scores[0].get('genres_id'))[:10]
         # genres = {}
         # for score in scores:
         #     if score.get('movie_id') in movies.all():
         #         genres[score.get('movie_id')].add(score.get('genre_ids'))
                 
 
-        context = {'scores': scores, 'movies': movies}
-        return render(request, 'movies/recommend.html', context)    
-
+            context = {'scores': scores, 'movies': movies}
+            return render(request, 'movies/recommend.html', context)    
+        else:
+            return redirect('movies:index')
     else:
         return redirect('movies:index')
