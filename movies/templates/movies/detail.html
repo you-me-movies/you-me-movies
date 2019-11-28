@@ -52,125 +52,170 @@
 {% endfor %}
 <hr>
 
-{% if movie.overview %}줄거리 :
-{{ movie.overview }}
-
-{% else %}
-줄거리를 입력해주세요 <a href="">입력</a>
-{% endif %}
-<hr>
-
-
-<p>평점 : {{ movie.vote_average }}</p>
-<hr>
-
-댓글 목록
-<br>
-
-{% for review in reviews %}
-<div>
-  <li>
-    내용 : {{ review.content }} |
-    평점 : {{ review.score }} |
-    작성자 : <a class="badge badge-secondary" href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
-
-    {% if request.user == review.user %}
-    <form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
-      style="display: inline">
-      {% csrf_token %}
-      <input type="submit" value="삭제" class="btn btn-primary btn-sm">
-
-    </form>
-    {% endif %}
-
-  </li>
-</div>
-{% endfor %}
-
-
-
-<div class="alert" role="alert" id="result"></div>
-
-{% if user.is_authenticated %}
-<form action="{% url 'movies:new' movie.id %}" method="POST">
-  {% csrf_token %}
-  {{ review_form }}
-  <input type="submit" value="submit">
-  <h1>Pure CSS Star Rating</h1>
-  <div class="rating">
-    <input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
-    <input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
-    <input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
-    <input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
-    <input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
-  </div>
-</form>
-{% else %}
-<a href="{% url 'accounts:login' %}"> [리뷰를 남기려면, 로그인하세요]</a>
-{% endif %}
-<hr>
-<div class="rating"></div>
-</div>
-
-
-{% endblock %}
-
+{% block content %}
 
 <style>
-body {
-	background: #F1F1F1;
-	
-	h1 {
-    	font-family: 'Lobster', cursive;
-		margin: 50px 20px 40px;
-		font-size: 50px;
-		letter-spacing: 0.5px;
-		color: #999999;
-		text-align: center;
-	}
+	.container1 {
+  display: flex;
+  width: 100%;
+  padding: 4% 2%;
+  box-sizing: border-box;
+  height: 50vh;
 }
 
-$stars: 5;
-$star-size: 40px;
-$star-spacing: 2px;
-$star-on-color: #F9DF4A;
-$star-off-color: #CCCCCC;
+.box {
+  flex: 1;
+  overflow: hidden;
+  transition: .5s;
+  margin: 0 2%;
+  box-shadow: 0 20px 30px rgba(0,0,0,.1);
+  line-height: 0;
+}
 
-.rating {
-	width: ($star-size * $stars) + ($star-spacing * ($stars - 1));
-	height: $star-size;
-	margin: 0 auto;
-	padding: 40px 50px;
-	border: 1px solid #CCCCCC;
-	background: #F9F9F9;
+.box > img {
+  width: 100%;
+  height: calc(100% - 10vh);
+  object-fit: cover; 
+  transition: .5s;
+}
 
-	label {
-		float: right;
-		position: relative;
-		width: $star-size;
-		height: $star-size;
-		cursor: pointer;
-		
-		&:not(:first-of-type) {
-			padding-right: $star-spacing;
-		}
-		
-		&:before {
-			content: "\2605";
-			font-size: $star-size + 2px;
-			color: $star-off-color;
-			line-height: 1;
-		}
-	}
-	
-	input {
-		display: none;
-	}
-	
-	input:checked ~ label:before,
-	&:not(:checked) > label:hover:before,
-	&:not(:checked) > label:hover ~ label:before {
-		color: $star-on-color;
-	}
+.box > span {
+  font-size: 3.8vh;
+  display: block;
+  text-align: center;
+  height: 10vh;
+  line-height: 2.6;
+}
+.box:hover { flex: 0 1 25%; }
+.box:hover > img {
+  width: 100%;
+  height: 80%;
 }
 </style>
+
+<a href="{% url 'movies:index' %}" type="button" class="btn btn-dark btn-sm">뒤로가기</a>
+<div class="card p-5" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
+	<h1>DETAIL</h1>
+	{% if user.is_staff %}
+	<div><a href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
+	{% endif %}
+	<hr>
+	<!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
+	{% if movie.trailer != null %}
+	<iframe width="100%" height="641" src="https://www.youtube.com/embed/{{ movie.trailer }}/" frameborder="0"
+		allowfullscreen class="mb-0"></iframe>
+	<hr>
+	{% endif %}
+
+
+
+	<p>제목 : {{ movie.title }}</p>
+	<hr>
+
+	감독 : {{ movie.director }}
+	<hr>
+	출연진 :
+
+	{% comment %} <div class="container">
+		<div class="row">
+			{% for person in movie.cast.all %}
+			<p class="col-4">
+				<a class="btn btn-primary" data-toggle="collapse" href="#{{ person.id }}" role="button" aria-expanded="false"
+					aria-controls="{{ person.name}}">
+					{{ person.name }}</a>
+			</p>
+			<div class="collapse" id="{{ person.id }}">
+				<div class="card card-body">
+					{% if person.path != none %}
+					<img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
+					{% else %}
+					<img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
+					<p class="mb-0" style="color: black; font-size: 20px;">이미지가 없습니다.</p>
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div> {% endcomment %}
+
+
+	<div class="container1">
+		<div class="row">
+			{% for person in movie.cast.all %}
+			<div class="box w-25">
+				{% if person.path != none %}
+				<img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
+				{% else %}
+				<img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
+				<p class="mb-0" style="color: black; font-size: 20px;">이미지가 없습니다.</p>
+				{% endif %}
+				<span>{{ person.name }}</span>
+			</div>
+			{% endfor %}
+		</div>
+	</div><br>
+	<br>
+	<br>
+	장르 :
+	{% for genres in movie.genre_ids.all %}
+	{{ genres }} |
+	{% endfor %}
+	<hr>
+
+	{% if movie.overview %}줄거리 :
+	{{ movie.overview }}
+
+	{% else %}
+	줄거리를 입력해주세요 <a href="">입력</a>
+	{% endif %}
+	<hr>
+
+
+	<p>평점 : {{ movie.vote_average }}</p>
+	<hr>
+
+	댓글 목록
+	<br>
+
+	{% for review in reviews %}
+	<div>
+		<li>
+			내용 : {{ review.content }} |
+			평점 : {{ review.score }} |
+			작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
+
+			{% if request.user == review.user %}
+			<form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
+				style="display: inline">
+				{% csrf_token %}
+				<input type="submit" value="삭제" class="btn btn-primary btn-sm">
+
+			</form>
+			{% endif %}
+
+		</li>
+	</div>
+	{% endfor %}
+
+
+	<div class="alert" role="alert" id="result"></div>
+
+	{% if user.is_authenticated %}
+	<form action="{% url 'movies:new' movie.id %}" method="POST">
+		{% csrf_token %}
+		{{ review_form }}
+		<input type="submit" value="submit">
+	</form>
+	{% else %}
+	<a href="{% url 'accounts:login' %}"> [리뷰를 남기려면, 로그인하세요]</a>
+	{% endif %}
+	<hr>
+
+
+</div>
+
+<script>
+
+</script>
+
+{% endblock %}
