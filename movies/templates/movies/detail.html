@@ -5,7 +5,7 @@
 <div class="card p-5" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
 <h1>DETAIL</h1>
 {% if user.is_staff %}
-<div><a href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
+<div><a class="btn btn-primary btn-sm" href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
 {% endif %}
 <hr>
 <!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
@@ -72,7 +72,7 @@
   <li>
     내용 : {{ review.content }} |
     평점 : {{ review.score }} |
-    작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
+    작성자 : <a class="badge badge-secondary" href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
 
     {% if request.user == review.user %}
     <form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
