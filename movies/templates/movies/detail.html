@@ -36,7 +36,7 @@
   height: 10vh;
   line-height: 2.6;
 }
-.box:hover { flex: 0 1 25%; }
+.box:hover { flex: 0 1 35%; }
 .box:hover > img {
   width: 100%;
   height: 80%;
@@ -71,16 +71,19 @@
 			{% for person in movie.cast.all %}
 			<div class="box w-25">
 				{% if person.path != none %}
-				<img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
+				<div class="m_name" data-toggle="tooltip" data-placement="top" title="클릭하여 배우 검색">
+				<a href="https://www.google.com/search?q={{ person.name }}"><img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}"></a>
+				</div>
 				{% else %}
-				<img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
-				<p class="mb-0" style="color: black; font-size: 20px;"></p>
+				<div class="m_name" data-toggle="tooltip" data-placement="top" title="클릭하여 배우 검색">
+				<a href="https://www.google.com/search?q={{ person.name }}"><img style="height: 450px; width:300px;" src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg"></a>
+				</div>
 				{% endif %}
 				<span>{{ person.name }}</span>
 			</div>
 			{% endfor %}
 		</div>
-	</div><br>
+	</div><br><br><br><br>
 	<br>
 	<br>
 	장르 :
@@ -98,7 +101,7 @@
 	<hr>
 
 
-	<p>평점 : {{ movie.vote_average }}</p>
+	<p>평점 : {{ movie.vote_average }} 점</p>
 	<hr>
 
 	댓글 목록
