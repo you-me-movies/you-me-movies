@@ -13,12 +13,15 @@ from IPython import embed
 
 # Create your views here.
 def first_page(request):
-    # if request.user.is_authenticated:
-    scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('genres_id')
-    context = {'scores': scores}
-    return render(request, 'movies/first_page.html', context)
-    # else:
-    #     return redirect('movies:first_page')
+    if request.user.is_authenticated:
+        scores = request.user.review_set.filter(score__gte=5).order_by('-score').values('genres_id')
+        if scores.count():
+            context = {'scores': scores,}
+            return render(request, 'movies/first_page.html', context)
+        else:
+            return render(request, 'movies/first_page.html')
+    else:
+        return render(request, 'movies/first_page.html')
 
 
 def index(request):
