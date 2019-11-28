@@ -2,57 +2,7 @@
 {% load bootstrap4%}
 {% bootstrap_css %}
 {% block content %}
-<div class="card p-5" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
-<h1>DETAIL</h1>
-{% if user.is_staff %}
-<div><a class="btn btn-primary btn-sm" href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
-{% endif %}
-<hr>
-<!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
-{% if movie.trailer != null %}
-<iframe width="100%" height="641" src="https://www.youtube.com/embed/{{ movie.trailer }}/" frameborder="0"
-  allowfullscreen class="mb-0"></iframe>
-<a href="{% url 'movies:index' %}" class="float-right">[Main Page]</a>
-<hr>
-{% endif %}
 
-
-
-<p>제목 : {{ movie.title }}</p>
-<hr>
-
-감독 : {{ movie.director }}
-<hr>
-출연진 :
-
-
-<div class="container">
-<div class="row">
-{% for person in movie.cast.all %}
-<p class="col-4">
-  <a class="btn btn-primary" data-toggle="collapse" href="#{{ person.id }}" role="button" aria-expanded="false" aria-controls="{{ person.name}}">
-  {{ person.name }}</a>
-</p>
-<div class="collapse" id="{{ person.id }}">
-  <div class="card card-body">
-  {% if person.path != none %}
-    <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
-  {% else %}
-    <img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
-    <p class="mb-0" style="color: black; font-size: 20px;">이미지가 없습니다.</p>
-  {% endif %}
-  </div>
-</div>
-{% endfor %}
-</div>
-</div>
-장르 :
-{% for genres in movie.genre_ids.all %}
-{{ genres }} |
-{% endfor %}
-<hr>
-
-{% block content %}
 
 <style>
 	.container1 {
@@ -97,7 +47,7 @@
 <div class="card p-5" style="color:white; background-color:rgba(201, 76, 76, 0.7);">
 	<h1>DETAIL</h1>
 	{% if user.is_staff %}
-	<div><a href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
+	<div><a class="btn btn-primary btn-sm" href="{% url 'movies:update' movie.pk %}">영화정보수정</a></div>
 	{% endif %}
 	<hr>
 	<!--<img class="w-25 mt-0 d-block" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ movie.poster_path }}" alt="poster"><hr>-->
@@ -116,29 +66,6 @@
 	<hr>
 	출연진 :
 
-	{% comment %} <div class="container">
-		<div class="row">
-			{% for person in movie.cast.all %}
-			<p class="col-4">
-				<a class="btn btn-primary" data-toggle="collapse" href="#{{ person.id }}" role="button" aria-expanded="false"
-					aria-controls="{{ person.name}}">
-					{{ person.name }}</a>
-			</p>
-			<div class="collapse" id="{{ person.id }}">
-				<div class="card card-body">
-					{% if person.path != none %}
-					<img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
-					{% else %}
-					<img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
-					<p class="mb-0" style="color: black; font-size: 20px;">이미지가 없습니다.</p>
-					{% endif %}
-				</div>
-			</div>
-			{% endfor %}
-		</div>
-	</div> {% endcomment %}
-
-
 	<div class="container1">
 		<div class="row">
 			{% for person in movie.cast.all %}
@@ -147,7 +74,7 @@
 				<img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ person.path }}">
 				{% else %}
 				<img src="http://www.fao.org/fileadmin/templates/experts-feed-safety/images/profile-img03.jpg">
-				<p class="mb-0" style="color: black; font-size: 20px;">이미지가 없습니다.</p>
+				<p class="mb-0" style="color: black; font-size: 20px;"></p>
 				{% endif %}
 				<span>{{ person.name }}</span>
 			</div>
@@ -182,7 +109,7 @@
 		<li>
 			내용 : {{ review.content }} |
 			평점 : {{ review.score }} |
-			작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
+			작성자 : <a class="badge badge-secondary" href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a>
 
 			{% if request.user == review.user %}
 			<form action="{% url 'movies:delete' movie.id review.id %}" method="POST" onclick="return confirm('삭제하시겠습니까')"
