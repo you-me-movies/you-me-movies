@@ -9,17 +9,6 @@
 
   <div class="main">
     <h1 class="text-white mt-3">영화 목록</h1>
-    <div class="dropdown d-flex justify-content-end">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        장르 선택
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        {% for genre in genres %}
-          <a class="dropdown-item" href="#">{{ genre }}</a>
-        {% endfor %}
-      </div>
-    </div>
     <hr>
     {% if user.is_staff %}
     <a href="{% url 'movies:create' %}" type="button" class="btn btn-dark btn-sm">새 영화 등록</a>
@@ -27,7 +16,7 @@
     <hr>
     <div class="row">
       {% for movie in movies %}
-      <div class="card col-3 px-0 mr-2 mb-2 bg-dark data-toggle=" tooltip" data-placement="top"" style=" width: 10rem;">
+      <div class="card col-3 px-0 mb-2 bg-dark rounded-lg data-toggle=" tooltip" data-placement="top"" style=" width: 10rem;">
         <a href="{% url 'movies:detail' movie.id %}"><img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"
             class="card-img-top" alt="#"></a>
         <div class="card-body text-info">
